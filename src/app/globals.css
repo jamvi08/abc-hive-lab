@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  --color-hive-bg: #0c0a14;
+  --color-hive-panel: #15121f;
+  --color-hive-panel2: #1c1829;
+  --color-hive-border: #2b2540;
+  --color-hive-text: #ece9f5;
+  --color-hive-muted: #a39cb8;
+  --color-honey: #fbbf24;
+  --color-employed: #f59e0b;
+  --color-onlooker: #38bdf8;
+  --color-scout: #fb7185;
+  --color-partner: #c4b5fd;
+  --color-good: #34d399;
+  --color-bad: #f87171;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-hive-bg);
+  color: var(--color-hive-text);
+}
+
+.card {
+  background: var(--color-hive-panel);
+  border: 1px solid var(--color-hive-border);
+  border-radius: 14px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-hive-muted);
+  font-weight: 600;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--color-hive-border);
+  background: var(--color-hive-panel2);
+  color: var(--color-hive-text);
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+.btn:hover:not(:disabled) {
+  border-color: #4b4170;
+  background: #241f36;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--color-honey);
+  color: #1a1206;
+  border-color: var(--color-honey);
+  font-weight: 600;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #fcd34d;
+  border-color: #fcd34d;
+}
+
+input[type="range"] {
+  accent-color: var(--color-honey);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* KaTeX: keep math readable on dark panels */
+.katex {
+  font-size: 1.05em;
+}
+.math-line .katex-display {
+  margin: 0;
+  text-align: left;
+}
+
+/* flash a cell when its value changes */
+@keyframes flash {
+  from {
+    background: rgba(251, 191, 36, 0.35);
+  }
+  to {
+    background: transparent;
+  }
+}
+.flash {
+  animation: flash 1.1s ease-out;
+}
+
+@keyframes pulse-ring {
+  0% {
+    r: 10;
+    opacity: 0.9;
+  }
+  100% {
+    r: 26;
+    opacity: 0;
+  }
+}
+.pulse {
+  animation: pulse-ring 1.2s ease-out infinite;
+}
+
+@keyframes waggle {
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+.waggle {
+  animation: waggle 0.35s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.move {
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .move,
+  .flash,
+  .pulse,
+  .waggle {
+    transition: none !important;
+    animation: none !important;
+  }
+}
