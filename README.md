@@ -95,6 +95,17 @@ npm run build      # static export to ./out
 
 Requires Node.js 20.9+.
 
+### Re-record the demo video
+
+`demo/SCRIPT.md` is the timed narration. `demo/record-demo.mjs` drives the app through exactly those beats and writes a
+silent MP4 that you can voice over:
+
+```bash
+npm run build && (cd out && python3 -m http.server 4173) &
+npx playwright install chromium          # once
+node demo/record-demo.mjs http://localhost:4173 demo/hive-lab-demo.mp4   # needs ffmpeg
+```
+
 ## Project structure
 
 ```

@@ -19,6 +19,25 @@ function sector(r0: number, r1: number, a0: number, a1: number) {
   return `M ${x0} ${y0} A ${r1} ${r1} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${r0} ${r0} 0 ${large} 0 ${x3} ${y3} Z`;
 }
 
+/** onlookers recruited to a source this cycle: up to 3 dots, then "+n" */
+function TallyDots({ n, r0, angle }: { n: number; r0: number; angle: number }) {
+  const shown = Math.min(n, n > 3 ? 2 : 3);
+  const [lx, ly] = polar(r0 + shown * 7 + 4, angle);
+  return (
+    <g>
+      {Array.from({ length: shown }, (_, k) => {
+        const [tx, ty] = polar(r0 + k * 7, angle);
+        return <circle key={k} cx={tx} cy={ty} r="2.8" fill="#38bdf8" />;
+      })}
+      {n > shown && (
+        <text x={lx} y={ly + 3} textAnchor="middle" fontSize="9" fill="#bae6fd">
+          +{n - shown}
+        </text>
+      )}
+    </g>
+  );
+}
+
 export function OnlookerWheel({
   step,
   prob,
@@ -76,10 +95,7 @@ export function OnlookerWheel({
               <text x={lx} y={ly + 4} textAnchor="middle" fontSize="11" fontWeight={active ? 700 : 500} fill={active ? "#fff" : "#a39cb8"}>
                 {m + 1}
               </text>
-              {Array.from({ length: tally[m] ?? 0 }, (_, k) => {
-                const [tx, ty] = polar(R + 26 + k * 7, (m + 0.5) * a);
-                return <circle key={k} cx={tx} cy={ty} r="2.8" fill="#38bdf8" />;
-              })}
+              <TallyDots n={tally[m] ?? 0} r0={R + 24} angle={(m + 0.5) * a} />
             </g>
           );
         })}
@@ -118,10 +134,7 @@ export function OnlookerWheel({
                   {m + 1}
                 </text>
               )}
-              {Array.from({ length: tally[m] ?? 0 }, (_, k) => {
-                const [tx, ty] = polar(R + 9 + k * 7, mid);
-                return <circle key={k} cx={tx} cy={ty} r="2.8" fill="#38bdf8" />;
-              })}
+              <TallyDots n={tally[m] ?? 0} r0={R + 9} angle={mid} />
             </g>
           );
         })}
