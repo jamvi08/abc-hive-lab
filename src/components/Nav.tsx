@@ -6,16 +6,16 @@ import { BeeGlyph } from "./sim/glyphs";
 
 const LINKS = [
   { href: "/", label: "Simulator" },
-  { href: "/race", label: "ABC vs Random Race" },
-  { href: "/verify", label: "Textbook Check" },
-  { href: "/learn", label: "Learn ABC" },
+  { href: "/race", label: "Race" },
+  { href: "/verify", label: "Slide Check" },
+  { href: "/learn", label: "Learn" },
 ];
 
 export function Nav() {
   const path = usePathname();
   const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, "") : p);
   return (
-    <header className="sticky top-0 z-30 border-b border-hive-border bg-hive-bg/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-hive-border bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-[1600px] items-center gap-6 px-5 py-3">
         <Link href="/" className="flex items-center gap-2">
           <svg width="30" height="30" viewBox="-15 -15 30 30" aria-hidden>
@@ -35,7 +35,7 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
-                  active ? "bg-hive-panel2 text-honey" : "text-hive-muted hover:text-hive-text"
+                  active ? "bg-amber-100 font-medium text-amber-900" : "text-hive-muted hover:text-hive-text"
                 }`}
               >
                 {l.label}

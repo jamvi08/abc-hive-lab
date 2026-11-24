@@ -1,16 +1,16 @@
 "use client";
 
-import { explain, textbookNote } from "@/lib/abc/explain";
+import { explain, summarize, textbookNote } from "@/lib/abc/explain";
 import type { AbcConfig, Phase, Step } from "@/lib/abc/types";
 import { Rich, Tex } from "../Tex";
 
-export const PHASE_META: Record<Phase, { label: string; color: string }> = {
-  init: { label: "Initialization", color: "#a78bfa" },
-  employed: { label: "Employed bees", color: "#f59e0b" },
-  onlooker: { label: "Onlooker bees", color: "#38bdf8" },
-  scout: { label: "Scout bees", color: "#fb7185" },
-  memorize: { label: "Memorize best", color: "#fde047" },
-  done: { label: "Finished", color: "#34d399" },
+export const PHASE_META: Record<Phase, { label: string; short: string; soft: string; ink: string }> = {
+  init: { label: "Start", short: "Start", soft: "#ede9fe", ink: "#6d28d9" },
+  employed: { label: "Employed bees", short: "Employed", soft: "#fef3c7", ink: "#b45309" },
+  onlooker: { label: "Onlooker bees", short: "Onlooker", soft: "#e0f2fe", ink: "#0369a1" },
+  scout: { label: "Scout bees", short: "Scout", soft: "#ffe4e6", ink: "#be123c" },
+  memorize: { label: "Remember best", short: "Best", soft: "#fef9c3", ink: "#a16207" },
+  done: { label: "Finished", short: "Done", soft: "#d1fae5", ink: "#047857" },
 };
 
 export function Explanation({
@@ -18,81 +18,77 @@ export function Explanation({
   cfg,
   textbook,
   feedback,
+  showMath,
+  onToggleMath,
 }: {
   step: Step;
   cfg: AbcConfig;
   textbook: boolean;
   feedback: { correct: boolean; why: string } | null;
+  showMath: boolean;
+  onToggleMath: () => void;
 }) {
-  const e = explain(step, cfg);
+  const sum = summarize(step, cfg);
   const note = textbook ? textbookNote(step) : null;
   const meta = PHASE_META[step.phase];
+  const detail = showMath ? explain(step, cfg) : null;
+
   return (
-    <section className="card relative overflow-hidden p-5" aria-live="polite">
-      <div className="absolute inset-y-0 left-0 w-1" style={{ background: meta.color }} />
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span
-          className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider"
-          style={{ background: `${meta.color}22`, color: meta.color }}
-        >
+    <section className="card p-5" aria-live="polite" data-testid="explanation">
+      <div className="mb-2 flex items-center gap-2">
+        <span className="rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold" style={{ background: meta.soft, color: meta.ink }}>
           {meta.label}
         </span>
-        {step.cycle > 0 && step.kind !== "done" && <span className="text-xs text-hive-muted">Cycle {step.cycle}</span>}
-        {step.offScript && textbook && (
-          <span className="rounded-full bg-hive-panel2 px-2 py-0.5 text-[11px] text-hive-muted">beyond the slides · seeded random</span>
-        )}
+        {step.cycle > 0 && step.kind !== "done" && <span className="text-xs text-hive-muted">cycle {step.cycle}</span>}
       </div>
-      <h2 className="mb-3 text-lg font-semibold leading-snug">{e.title}</h2>
+      <h2 className="text-[19px] font-semibold leading-snug text-stone-900">{sum.title}</h2>
 
       {feedback && (
-        <div
-          className={`mb-3 rounded-lg border px-3 py-2 text-sm ${
-            feedback.correct ? "border-good/40 bg-good/10 text-emerald-200" : "border-bad/40 bg-bad/10 text-red-200"
-          }`}
-        >
-          <strong>{feedback.correct ? "✓ Correct prediction!" : "✗ Not quite."}</strong> {feedback.why}
+        <div className={`mt-3 rounded-lg border px-3 py-2 text-[13.5px] ${feedback.correct ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-red-50 text-red-800"}`}>
+          <strong>{feedback.correct ? "✓ Correct!" : "✗ Not quite."}</strong> {feedback.why}
         </div>
       )}
 
-      <div className="space-y-2 text-[14.5px] leading-relaxed text-zinc-300">
-        {e.body.map((b, i) => (
+      <div className="mt-2 space-y-1.5 text-[15px] leading-relaxed text-stone-700">
+        {sum.short.map((t, i) => (
           <p key={i}>
-            <Rich text={b} />
+            <Rich text={t} />
           </p>
         ))}
       </div>
 
-      {e.math.length > 0 && (
-        <div className="mt-4 space-y-1.5 overflow-x-auto rounded-lg border border-hive-border bg-hive-bg/60 px-4 py-3">
-          {e.math.map((m, i) => (
-            <div key={i} className="math-line">
-              <Tex tex={m} />
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <button className="text-[13px] font-medium text-amber-700 hover:underline" onClick={onToggleMath} aria-expanded={showMath} data-testid="show-math">
+          {showMath ? "Hide the math ▴" : "Show the math ▾"}
+        </button>
+        {note && (
+          <span className="rounded-md bg-violet-50 px-2 py-0.5 text-[12px] text-violet-800">
+            📖 slide {note.slide}
+            {note.derived ? " · back-calculated numbers" : " · same numbers"}
+          </span>
+        )}
+        {step.offScript && textbook && <span className="text-[12px] text-hive-muted">past the slides: random numbers from the seed</span>}
+      </div>
+
+      {detail && (
+        <div className="mt-3 space-y-3 border-t border-hive-border pt-3">
+          {detail.math.length > 0 && (
+            <div className="space-y-1 overflow-x-auto rounded-lg bg-hive-panel2 px-4 py-3">
+              {detail.math.map((m, i) => (
+                <div key={i} className="math-line">
+                  <Tex tex={m} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-
-      {e.verdict && (
-        <div
-          className={`mt-3 inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-[13px] font-medium ${
-            e.verdict.tone === "good"
-              ? "bg-good/10 text-emerald-300"
-              : e.verdict.tone === "bad"
-                ? "bg-bad/10 text-red-300"
-                : "bg-hive-panel2 text-hive-muted"
-          }`}
-        >
-          {e.verdict.tone === "good" ? "▲" : e.verdict.tone === "bad" ? "▼" : "●"} {e.verdict.text}
-        </div>
-      )}
-
-      {note && (
-        <div className="mt-4 rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-2 text-[13px] text-violet-100">
-          <span className="font-semibold">📖 Slide {note.slide}</span>
-          {note.derived && (
-            <span className="ml-2 rounded bg-violet-400/20 px-1.5 py-0.5 text-[11px]">back-calculated random numbers</span>
           )}
-          <div className="mt-1 text-violet-200/90">{note.text}</div>
+          <div className="space-y-1.5 text-[13.5px] leading-relaxed text-stone-600">
+            {detail.body.map((b, i) => (
+              <p key={i}>
+                <Rich text={b} />
+              </p>
+            ))}
+          </div>
+          {note && <p className="rounded-lg bg-violet-50 px-3 py-2 text-[13px] text-violet-900">📖 {note.text}</p>}
         </div>
       )}
     </section>

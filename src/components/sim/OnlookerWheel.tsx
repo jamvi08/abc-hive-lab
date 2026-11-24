@@ -27,10 +27,10 @@ function TallyDots({ n, r0, angle }: { n: number; r0: number; angle: number }) {
     <g>
       {Array.from({ length: shown }, (_, k) => {
         const [tx, ty] = polar(r0 + k * 7, angle);
-        return <circle key={k} cx={tx} cy={ty} r="2.8" fill="#38bdf8" />;
+        return <circle key={k} cx={tx} cy={ty} r="2.8" fill="#0284c7" />;
       })}
       {n > shown && (
-        <text x={lx} y={ly + 3} textAnchor="middle" fontSize="9" fill="#bae6fd">
+        <text x={lx} y={ly + 3} textAnchor="middle" fontSize="9" fill="#0369a1">
           +{n - shown}
         </text>
       )}
@@ -60,11 +60,11 @@ export function OnlookerWheel({
   if (!prob) {
     body = (
       <g>
-        <circle cx={C} cy={C} r={R} fill="none" stroke="#2b2540" strokeWidth="1.5" />
-        <text x={C} y={C - 6} textAnchor="middle" fontSize="12.5" fill="#a39cb8">
+        <circle cx={C} cy={C} r={R} fill="none" stroke="#e7e5e0" strokeWidth="1.5" />
+        <text x={C} y={C - 6} textAnchor="middle" fontSize="12.5" fill="#6b675f">
           Onlookers wait in the hive…
         </text>
-        <text x={C} y={C + 12} textAnchor="middle" fontSize="11" fill="#6b6385">
+        <text x={C} y={C + 12} textAnchor="middle" fontSize="11" fill="#a8a29e">
           p comes after the employed phase
         </text>
       </g>
@@ -73,8 +73,8 @@ export function OnlookerWheel({
     const a = (2 * Math.PI) / Np;
     body = (
       <g>
-        <circle cx={C} cy={C} r={R} fill="none" stroke="#3b3357" strokeWidth="1" />
-        <circle cx={C} cy={C} r={R0 + 0.1 * (R - R0)} fill="none" stroke="#3b3357" strokeWidth="1" strokeDasharray="0" />
+        <circle cx={C} cy={C} r={R} fill="none" stroke="#d6d3cc" strokeWidth="1" />
+        <circle cx={C} cy={C} r={R0 + 0.1 * (R - R0)} fill="none" stroke="#d6d3cc" strokeWidth="1" strokeDasharray="0" />
         {prob.map((p, m) => {
           const a0 = m * a + 0.02,
             a1 = (m + 1) * a - 0.02;
@@ -82,17 +82,17 @@ export function OnlookerWheel({
           const [lx, ly] = polar(R + 14, (m + 0.5) * a);
           return (
             <g key={m}>
-              <path d={sector(R0, R, a0, a1)} fill="#ffffff" opacity="0.03" />
+              <path d={sector(R0, R, a0, a1)} fill="#f3f2ee" />
               <path
                 d={sector(R0, R0 + p * (R - R0), a0, a1)}
                 fill="#f59e0b"
                 opacity={active ? 0.95 : 0.45}
-                stroke={active ? "#fff" : "none"}
+                stroke={active ? "#1f1d1a" : "none"}
                 strokeWidth="1.5"
               >
                 <title>{`Source ${m + 1}: p = ${fmt(p)}`}</title>
               </path>
-              <text x={lx} y={ly + 4} textAnchor="middle" fontSize="11" fontWeight={active ? 700 : 500} fill={active ? "#fff" : "#a39cb8"}>
+              <text x={lx} y={ly + 4} textAnchor="middle" fontSize="11" fontWeight={active ? 700 : 500} fill={active ? "#1f1d1a" : "#6b675f"}>
                 {m + 1}
               </text>
               <TallyDots n={tally[m] ?? 0} r0={R + 24} angle={(m + 0.5) * a} />
@@ -102,7 +102,7 @@ export function OnlookerWheel({
         {d?.method === "sweep" && (
           <path
             d={sector(R0 + d.r * (R - R0) - 1.5, R0 + d.r * (R - R0) + 1.5, d.m * a - 0.05, (d.m + 1) * a + 0.05)}
-            fill={d.recruited ? "#38bdf8" : "#e4e4e7"}
+            fill={d.recruited ? "#0284c7" : "#78716c"}
           />
         )}
       </g>
@@ -124,13 +124,13 @@ export function OnlookerWheel({
                 d={sector(R0, R, a0, a1)}
                 fill="#f59e0b"
                 opacity={active ? 0.95 : 0.4}
-                stroke="#15121f"
+                stroke="#ffffff"
                 strokeWidth="2"
               >
                 <title>{`Source ${m + 1}: p = ${fmt(prob[m])}, slice = ${fmt((prob[m] / total) * 100, 1)}%`}</title>
               </path>
               {a1 - a0 > 0.24 && (
-                <text x={lx} y={ly + 4} textAnchor="middle" fontSize="11" fontWeight={active ? 700 : 500} fill={active ? "#1c1206" : "#f5f3ff"}>
+                <text x={lx} y={ly + 4} textAnchor="middle" fontSize="11" fontWeight={active ? 700 : 500} fill={active ? "#1c1206" : "#78350f"}>
                   {m + 1}
                 </text>
               )}
@@ -139,43 +139,36 @@ export function OnlookerWheel({
           );
         })}
         <g style={{ transform: `rotate(${angle}deg)`, transformOrigin: `${C}px ${C}px`, transition: `transform ${Math.max(dur, 250) * 1.6}ms cubic-bezier(0.2, 0.8, 0.2, 1)` }}>
-          <line x1={C} y1={C} x2={C} y2={C - R - 6} stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
-          <circle cx={C} cy={C - R - 6} r="4" fill="#fff" />
+          <line x1={C} y1={C} x2={C} y2={C - R - 6} stroke="#1f1d1a" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx={C} cy={C - R - 6} r="4" fill="#1f1d1a" />
         </g>
-        <circle cx={C} cy={C} r="7" fill="#fff" />
+        <circle cx={C} cy={C} r="7" fill="#1f1d1a" />
       </g>
     );
   }
 
   return (
-    <section className="card p-4">
-      <div className="label mb-1">{selection === "sweep" ? "Onlooker selection: r < pₘ (slides)" : "Onlooker selection: roulette wheel"}</div>
+    <section>
+      <div className="label mb-1">{selection === "sweep" ? "How onlookers pick a flower (r < p)" : "How onlookers pick a flower (roulette wheel)"}</div>
       <div className="flex items-center gap-4">
         <svg viewBox={`0 0 ${S} ${S}`} className="w-[230px] shrink-0" role="img" aria-label="Onlooker selection wheel">
           {body}
         </svg>
         <div className="space-y-2 text-[12.5px] leading-relaxed text-hive-muted">
           {selection === "sweep" ? (
-            <>
-              <p>
-                Each petal&apos;s length is p<sub>m</sub>. Onlookers visit the sources in turn and draw a random r, shown as
-                the thin arc.
-              </p>
-              <p>
-                If the arc falls <span className="text-onlooker">inside the petal</span> (r &lt; p<sub>m</sub>), an onlooker is
-                recruited. Otherwise the source is skipped.
-              </p>
-            </>
+            <p>
+              Each petal&apos;s length is the flower&apos;s chance <b className="text-stone-800">p</b>. Onlookers check the flowers one by one
+              with a random number r (the thin arc). If the arc is <span className="text-sky-700">inside the petal</span> (r &lt; p), an
+              onlooker goes there.
+            </p>
           ) : (
-            <>
-              <p>
-                Each slice is p<sub>m</sub>/Σp of the wheel. Each onlooker spins once, and the pointer picks the food source.
-              </p>
-              <p>Richer sources have bigger slices, so they attract more onlookers. This is the positive feedback.</p>
-            </>
+            <p>
+              Each slice is a flower. Better flowers get <b className="text-stone-800">bigger slices</b>, so the spinning pointer lands on
+              them more often. That is the positive feedback.
+            </p>
           )}
           <p className="flex items-center gap-1.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-onlooker" /> = onlookers recruited this cycle
+            <span className="inline-block h-2 w-2 rounded-full bg-onlooker" /> = onlookers sent there this cycle
           </p>
           {d?.method === "sweep" && (
             <p className="num text-hive-text">

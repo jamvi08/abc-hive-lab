@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Phase, Step } from "@/lib/abc/types";
 import { PHASE_META } from "./Explanation";
 
@@ -9,9 +10,6 @@ const I = {
   fwd: "M9 18l6-6-6-6",
   play: "M7 5l12 7-12 7z",
   pause: "M7 5h4v14H7zM13 5h4v14h-4z",
-  phase: "M5 5l7 7-7 7M12 5l7 7-7 7",
-  cycle: "M4 12h12M12 6l6 6-6 6M20 5v14",
-  end: "M5 5l7 7-7 7M13 5l7 7-7 7M21 5v14",
 };
 
 function Icon({ d, fill = false }: { d: string; fill?: boolean }) {
@@ -59,42 +57,61 @@ export function Controls({
   onEnd: () => void;
   onSpeed: (s: number) => void;
 }) {
+  const [skipOpen, setSkipOpen] = useState(false);
   const block = atEnd || quizPending;
   // log-scale speed slider: 0.5 .. 40 steps/s
   const toSlider = (s: number) => Math.log(s / 0.5) / Math.log(80);
   const fromSlider = (v: number) => +(0.5 * Math.pow(80, v)).toFixed(2);
+  const skip = (fn: () => void) => () => {
+    setSkipOpen(false);
+    fn();
+  };
+
   return (
-    <div className="card sticky top-[61px] z-20 flex flex-wrap items-center gap-2 px-3 py-2.5">
-      <button className="btn" onClick={onReset} title="Reset (R)" data-testid="reset">
+    <div className="card sticky top-[61px] z-20 flex flex-wrap items-center gap-2 px-3 py-2">
+      <button className="btn" onClick={onReset} title="Start again (R)" data-testid="reset">
         <Icon d={I.reset} /> Reset
       </button>
       <button className="btn" onClick={onBack} disabled={idx === 0} title="Step back (←)" data-testid="back">
         <Icon d={I.back} /> Back
       </button>
       {playing ? (
-        <button className="btn btn-primary w-[92px] justify-center" onClick={onPause} title="Pause (Space)" data-testid="pause">
+        <button className="btn btn-primary w-[88px] justify-center" onClick={onPause} title="Pause (Space)" data-testid="pause">
           <Icon d={I.pause} fill /> Pause
         </button>
       ) : (
-        <button className="btn btn-primary w-[92px] justify-center" onClick={onPlay} disabled={block} title="Play (Space)" data-testid="play">
+        <button className="btn btn-primary w-[88px] justify-center" onClick={onPlay} disabled={block} title="Play (Space)" data-testid="play">
           <Icon d={I.play} fill /> Play
         </button>
       )}
-      <button className="btn" onClick={onStep} disabled={block} title="Step (→)" data-testid="step">
+      <button className="btn" onClick={onStep} disabled={block} title="One step (→)" data-testid="step">
         Step <Icon d={I.fwd} />
       </button>
-      <button className="btn" onClick={onPhase} disabled={block} title="Next phase (N)" data-testid="next-phase">
-        <Icon d={I.phase} /> Phase
-      </button>
-      <button className="btn" onClick={onCycle} disabled={block} title="Next cycle (C)" data-testid="next-cycle">
-        <Icon d={I.cycle} /> Cycle
-      </button>
-      <button className="btn" onClick={onEnd} disabled={atEnd} title="Run to the end (E)" data-testid="to-end">
-        <Icon d={I.end} /> End
-      </button>
 
-      <label className="ml-2 flex items-center gap-2 text-xs text-hive-muted">
-        Speed
+      <div className="relative">
+        <button className="btn" onClick={() => setSkipOpen(!skipOpen)} disabled={block && !atEnd} aria-expanded={skipOpen} data-testid="skip">
+          Skip ▾
+        </button>
+        {skipOpen && (
+          <>
+            <div className="fixed inset-0 z-10" onClick={() => setSkipOpen(false)} />
+            <div className="absolute left-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-lg border border-hive-border bg-white py-1 text-[13px] shadow-lg">
+              <button className="block w-full px-3 py-2 text-left hover:bg-hive-panel2 disabled:opacity-40" disabled={block} onClick={skip(onPhase)} data-testid="next-phase">
+                to the next phase <span className="float-right text-hive-muted">N</span>
+              </button>
+              <button className="block w-full px-3 py-2 text-left hover:bg-hive-panel2 disabled:opacity-40" disabled={block} onClick={skip(onCycle)} data-testid="next-cycle">
+                to the next cycle <span className="float-right text-hive-muted">C</span>
+              </button>
+              <button className="block w-full px-3 py-2 text-left hover:bg-hive-panel2 disabled:opacity-40" disabled={atEnd} onClick={skip(onEnd)} data-testid="to-end">
+                to the end <span className="float-right text-hive-muted">E</span>
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      <label className="ml-1 flex items-center gap-1.5 text-xs text-hive-muted" title={`${speed} steps per second`}>
+        <span aria-hidden>🐢</span>
         <input
           type="range"
           min={0}
@@ -102,30 +119,31 @@ export function Controls({
           step={0.01}
           value={toSlider(speed)}
           onChange={(e) => onSpeed(fromSlider(+e.target.value))}
-          className="w-28"
+          className="w-24"
           aria-label="Playback speed"
           data-testid="speed"
         />
-        <span className="num w-16 text-hive-text">{speed < 10 ? speed.toFixed(1) : Math.round(speed)} steps/s</span>
+        <span aria-hidden>🐇</span>
       </label>
 
-      <div className="ml-auto flex items-center gap-1">
-        {PHASES.map((p) => {
+      <div className="ml-auto flex items-center gap-1 text-[12px]">
+        {PHASES.map((p, i) => {
           const active = step?.phase === p || (p === "memorize" && step?.phase === "done");
           const m = PHASE_META[p];
           return (
-            <span
-              key={p}
-              className="rounded-md px-2 py-1 text-[11px] font-medium transition-colors"
-              style={active ? { background: `${m.color}26`, color: m.color } : { color: "#6b6385" }}
-            >
-              {m.label.replace(" bees", "").replace(" best", "")}
+            <span key={p} className="flex items-center gap-1">
+              {i > 0 && <span className="text-stone-300">›</span>}
+              <span
+                className="rounded-md px-1.5 py-0.5 font-medium transition-colors"
+                style={active ? { background: m.soft, color: m.ink } : { color: "#a8a29e" }}
+              >
+                {m.short}
+              </span>
             </span>
           );
         })}
-        <span className="num ml-2 text-xs text-hive-muted">
-          cycle <span className="text-hive-text">{step?.cycle ?? 0}</span>/{maxCycles} · evals{" "}
-          <span className="text-hive-text">{step?.snap.evals ?? 0}</span>
+        <span className="num ml-3 text-hive-muted">
+          cycle <span className="font-semibold text-stone-900">{step?.cycle ?? 0}</span>/{maxCycles}
         </span>
       </div>
     </div>

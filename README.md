@@ -17,27 +17,27 @@ and checked against a hand calculation.
 
 | Requirement | How Hive Lab covers it |
 | --- | --- |
-| **Pick a problem, change parameters** | 6 built-in 2-D problems (Sphere, the slide example; Himmelblau; Rastrigin; Rosenbrock; Ackley; Six-Hump Camel, which goes negative and exercises `fit = 1 + |f|`) **plus a custom function box** (`x1^2 + 3*sin(x2)` …) with your own bounds. Parameters: colony size **S** (Np = S/2), **limit** (auto = Np × D, as the slides suggest), max cycles **T**, onlooker selection rule, random seed. |
-| **Play / pause / step / reset, state at every step** | Play, Pause, Step, **Back**, Reset, plus *next phase*, *next cycle*, *run to end*, and a speed slider (0.5–40 steps/s). Keyboard: `Space` `→` `←` `N` `C` `R`. Every step shows the full colony memory (X, f, fit, trial t, p) as a table, or as **slide-style matrices**. Changed cells flash. |
-| **Visualize + plain-language explanation** | A contour map of f with food sources drawn as flowers (size = nectar, ring = trial counter). The bee flies to the action, with the partner X^k, the one-variable move and bound clipping marked. Every step has a plain-English explanation **and the formula with the real numbers substituted** (KaTeX). The pseudocode from slide 7 highlights the current line. |
-| **Checked against a hand calculation / textbook example** | **Textbook mode** replays the solved example on slides 14–19 with the same initial population and random numbers. The **Textbook Check** page compares 86 slide values and 61 independently hand-calculated values with the engine. The same checks run as **168 unit tests**. |
+| **Pick a problem, change parameters** | One slim settings strip: problem (6 built-in 2-D problems, including the slide's x₁² + x₂², plus *Your own function…*), number of bees **S** (Np = S/2 flowers), **limit** (auto = Np × D, as the slides suggest) and **cycles T**. Less common settings (onlooker rule, seed, trails, quiz question types) sit under *More options*. |
+| **Play / pause / step / reset, state at every step** | Reset, Back, **Play/Pause**, **Step**, a *Skip* menu (next phase, next cycle, end) and a speed slider. Keyboard: `Space` `→` `←` `N` `C` `R`. The *Flowers table* tab shows every food source's x, f, fitness, failure counter t and p at every step, either as a table or *as on slides* (matrices). Changed cells flash. |
+| **Visualize + plain-language explanation** | A light contour map of f with food sources drawn as flowers (bigger = more nectar, ring = how many times it failed). A bee flies to wherever the action is. Each step gets a **one- or two-sentence explanation in plain words**. *Show the math* reveals the formula with the real numbers filled in, plus the matching slide. Tabs show the onlooker wheel, a progress chart and the slide-7 pseudocode with the current line highlighted. |
+| **Checked against a hand calculation / textbook example** | **Slide example** mode replays the solved example on slides 14–19 with the same starting flowers and random numbers. The **Slide Check** page compares 86 slide values and 61 independently hand-calculated values with the engine. The same checks run as **168 unit tests**. |
 
 ### Something new (beyond VisuAlgo)
 
-1. **Predict-the-next-step quiz.** Before each greedy selection, onlooker choice or scout check, the tool asks you
-   what will happen ("fit(v) = 0.037 vs fit(X¹) = 0.167: move or stay?"). Optionally it asks you to compute
-   `v = x + φ(x − x_k)` yourself. Your answer is scored, then the step is revealed.
+1. **"Quiz me" mode.** Before each greedy selection, onlooker choice or scout check, the tool asks what will
+   happen ("New spot fitness 0.037, old flower 0.167: move or stay?"). It can also ask you to calculate the new spot
+   by hand. Your answer is scored, then the step is revealed.
 2. **Onlooker wheel.** The slides' rule (visit sources in turn, recruit if `r < p_m`) is drawn as a *rose*: each
    petal's length is p_m and the random r is drawn as an arc. The alternative roulette-wheel rule (`p_m / Σp`)
    is drawn as a spinning wheel. Blue dots count the onlookers recruited this cycle, which shows the positive feedback.
-3. **ABC vs random search race.** Same problem, **same number of function evaluations**, side by side, with a
-   convergence chart. You can add *ablation* lanes (ABC without scouts, ABC without onlookers) to see what each
-   phase contributes, then **repeat the race 30 times** for a statistical answer. For example, on Rastrigin, ABC beats
-   random search in 30/30 runs.
-4. **Textbook check.** The slides' numbers are reproduced *and audited*. The tool flags three small slip-ups in the
+3. **ABC vs random search race.** Same problem, **same number of tries (function evaluations)**, side by side,
+   with a convergence chart. Under *More options* you can add racers without scouts or without onlookers to see what
+   each phase contributes, then **repeat the race 30 times**. For example, on Rastrigin, ABC beats random search in 30/30
+   races.
+4. **Slide check.** The slides' numbers are reproduced *and audited*. The tool flags three small slips in the
    slides and explains each one (see below).
 
-| Quiz | Onlooker wheel | Race | Textbook check |
+| Quiz | Onlooker wheel | Race | Slide check |
 | --- | --- | --- | --- |
 | ![quiz](docs/screenshots/quiz.png) | ![wheel](docs/screenshots/wheel.png) | ![race](docs/screenshots/race.png) | ![verify](docs/screenshots/verify.png) |
 
@@ -124,7 +124,7 @@ src/components/
   sim/             simulator: search space, controls, explanation, pseudocode, state table, wheel, quiz
   race/            ABC vs random search
   verify/          textbook check page
-src/app/           routes: / (simulator), /race, /verify, /learn
+src/app/           routes: / (simulator), /race, /verify (slide check), /learn
 demo/              demo video narration script + automated screen-recording script
 ```
 

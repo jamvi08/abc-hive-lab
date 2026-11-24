@@ -55,12 +55,14 @@ export default function LearnPage() {
       <header className="space-y-3">
         <div className="label">2-minute primer</div>
         <h1 className="text-3xl font-semibold tracking-tight">The Artificial Bee Colony algorithm</h1>
-        <p className="max-w-3xl text-[15px] leading-relaxed text-zinc-300">
-          Introduced by <strong>Dervis Karaboga</strong> (Erciyes University, 2005), ABC is a swarm-based metaheuristic for numerical
-          optimization. It is inspired by how honey bees forage and builds on the model of Tereshko and Loengarov. The colony
-          turns an optimization problem into a search for the parameter vector that <em>minimizes an objective function</em>. Good
-          solutions get exploited (<span className="text-good">positive feedback</span>, through recruitment) and poor ones get
-          abandoned (<span className="text-scout">negative feedback</span>).
+        <p className="max-w-3xl text-[16px] leading-relaxed text-stone-700">
+          ABC is an optimization algorithm introduced by <strong>Dervis Karaboga</strong> in 2005. It copies how honey bees find food. The bees spread
+          out, tell each other where the good flowers are, and give up on flowers that have run dry.
+        </p>
+        <p className="max-w-3xl text-[16px] leading-relaxed text-stone-700">
+          In the algorithm, a <b>flower (food source)</b> is a possible answer, and its <b>nectar (fitness)</b> is how good that answer is.
+          Good answers attract more bees (<span className="text-emerald-700">positive feedback</span>) and stuck answers are thrown away (
+          <span className="text-rose-600">negative feedback</span>).
         </p>
         <div className="flex flex-wrap gap-2 pt-1">
           <Link href="/" className="btn btn-primary">
@@ -104,8 +106,8 @@ export default function LearnPage() {
           <tbody>
             {MAPPING.map(([a, b]) => (
               <tr key={a} className="border-t border-hive-border/60">
-                <td className="w-56 py-2 pr-4 font-medium text-honey">{a}</td>
-                <td className="py-2 text-zinc-300">{b}</td>
+                <td className="w-56 py-2 pr-4 font-medium text-amber-700">{a}</td>
+                <td className="py-2 text-stone-700">{b}</td>
               </tr>
             ))}
           </tbody>
@@ -129,16 +131,16 @@ export default function LearnPage() {
           ))}
           <div className="card p-5">
             <h3 className="mb-2 font-medium">Control parameters</h3>
-            <ul className="space-y-1.5 text-[13.5px] text-zinc-300">
+            <ul className="space-y-1.5 text-[13.5px] text-stone-700">
               <li>
-                <span className="text-honey">S</span>: colony size, with <span className="text-honey">Np = S/2</span> food sources (= employed
+                <span className="text-amber-700">S</span>: colony size, with <span className="text-amber-700">Np = S/2</span> food sources (= employed
                 bees = onlookers)
               </li>
               <li>
-                <span className="text-honey">limit</span>: abandonment criterion, ideally Np × number of variables
+                <span className="text-amber-700">limit</span>: abandonment criterion, ideally Np × number of variables
               </li>
               <li>
-                <span className="text-honey">T / MCN</span>: maximum cycle number
+                <span className="text-amber-700">T / MCN</span>: maximum cycle number
               </li>
             </ul>
           </div>
@@ -148,7 +150,7 @@ export default function LearnPage() {
       <section className="grid gap-4 md:grid-cols-2">
         <div className="card p-5">
           <h2 className="mb-2 font-semibold">General algorithm (slide 7)</h2>
-          <ol className="font-mono text-[12.5px] leading-6 text-zinc-300">
+          <ol className="font-mono text-[12.5px] leading-6 text-stone-700">
             {PSEUDOCODE.map((l, i) => (
               <li key={i} style={{ paddingLeft: l.indent * 18 }}>
                 {l.text}
@@ -158,7 +160,7 @@ export default function LearnPage() {
         </div>
         <div className="card p-5">
           <h2 className="mb-2 font-semibold">Where ABC is used (slide 13)</h2>
-          <ul className="grid grid-cols-2 gap-2 text-[13.5px] text-zinc-300">
+          <ul className="grid grid-cols-2 gap-2 text-[13.5px] text-stone-700">
             {["Training neural networks", "Welded beam design", "Optimizing hybrid functions", "Integer programming", "Combinatorial problems", "Image processing"].map((a) => (
               <li key={a} className="rounded-lg bg-hive-panel2 px-3 py-2">
                 {a}
@@ -168,7 +170,7 @@ export default function LearnPage() {
           <h2 className="mb-2 mt-5 font-semibold">How to use this tool</h2>
           <ul className="space-y-1.5 text-[13.5px] text-hive-muted">
             <li>
-              <Link className="text-honey hover:underline" href="/">
+              <Link className="text-amber-700 hover:underline" href="/">
                 Simulator
               </Link>
               : pick a problem, change S, limit, T and the selection rule, then step through or play.
@@ -178,13 +180,13 @@ export default function LearnPage() {
               happens.
             </li>
             <li>
-              <Link className="text-honey hover:underline" href="/race">
+              <Link className="text-amber-700 hover:underline" href="/race">
                 Race
               </Link>
               : ABC against random search with the same budget, plus ablations.
             </li>
             <li>
-              <Link className="text-honey hover:underline" href="/verify">
+              <Link className="text-amber-700 hover:underline" href="/verify">
                 Textbook check
               </Link>
               : every number from the slides&apos; solved example, reproduced and verified.

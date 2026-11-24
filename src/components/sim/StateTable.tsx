@@ -30,34 +30,34 @@ export function StateTable({
   const bestIdx = snap.f.indexOf(Math.min(...snap.f));
 
   return (
-    <section className="card p-4">
-      <div className="mb-3 flex items-center gap-2">
-        <div className="label">Colony memory: food sources</div>
+    <section>
+      <div className="mb-2 flex items-center gap-2">
+        <div className="text-[13px] text-stone-700">Every flower the colony remembers, updated at each step.</div>
         <div className="ml-auto flex rounded-lg border border-hive-border p-0.5 text-xs">
           {(["table", "matrix"] as const).map((v) => (
             <button
               key={v}
               onClick={() => onView(v)}
-              className={`rounded-md px-2.5 py-1 ${view === v ? "bg-hive-panel2 text-honey" : "text-hive-muted"}`}
+              className={`rounded-md px-2.5 py-1 ${view === v ? "bg-hive-panel2 text-amber-700" : "text-hive-muted"}`}
               data-testid={`view-${v}`}
             >
-              {v === "table" ? "Table" : "Slide view"}
+              {v === "table" ? "Table" : "As on slides"}
             </button>
           ))}
         </div>
       </div>
 
       {view === "table" ? (
-        <div className="max-h-[430px] overflow-auto">
+        <div className="max-h-[340px] overflow-auto">
           <table className="num w-full text-right text-[13px]">
             <thead className="sticky top-0 bg-hive-panel text-[11px] uppercase tracking-wider text-hive-muted">
               <tr>
-                <th className="px-2 py-1.5 text-left">m</th>
+                <th className="px-2 py-1.5 text-left">flower</th>
                 <th className="px-2 py-1.5">x₁</th>
                 <th className="px-2 py-1.5">x₂</th>
                 <th className="px-2 py-1.5">f(x)</th>
-                <th className="px-2 py-1.5">fit</th>
-                <th className="px-2 py-1.5 text-left">trial t</th>
+                <th className="px-2 py-1.5">fitness</th>
+                <th className="px-2 py-1.5 text-left">failed t</th>
                 <th className="px-2 py-1.5">p</th>
               </tr>
             </thead>
@@ -73,12 +73,12 @@ export function StateTable({
                 return (
                   <tr
                     key={m}
-                    className={`border-t border-hive-border/60 ${focusM === m ? "bg-honey/10" : ""}`}
+                    className={`border-t border-hive-border/60 ${focusM === m ? "bg-amber-50" : ""}`}
                     data-testid={`row-${m + 1}`}
                   >
                     <td className="px-2 py-1 text-left font-semibold">
                       {m + 1}
-                      {m === bestIdx && <span className="ml-1 text-yellow-300">★</span>}
+                      {m === bestIdx && <span className="ml-1 text-amber-500">★</span>}
                     </td>
                     {cell("x1", fmt(x[0]), changed(x[0], p?.X[m]?.[0]))}
                     {cell("x2", fmt(x[1]), changed(x[1], p?.X[m]?.[1]))}
@@ -86,10 +86,10 @@ export function StateTable({
                     {cell("fit", fmt(snap.fit[m]), changed(snap.fit[m], p?.fit[m]))}
                     <td key={changed(tr, p?.trial[m]) ? `t${stepId}` : "t"} className={`px-2 py-1 text-left ${changed(tr, p?.trial[m]) ? "flash" : ""}`}>
                       <div className="flex items-center gap-2">
-                        <span className={`w-5 text-right ${tr > limit ? "font-semibold text-red-400" : ""}`}>{tr}</span>
+                        <span className={`w-5 text-right ${tr > limit ? "font-semibold text-red-600" : ""}`}>{tr}</span>
                         <div className="relative h-1.5 w-16 rounded-full bg-hive-border">
                           <div
-                            className={`absolute inset-y-0 left-0 rounded-full ${tr > limit ? "bg-red-400" : "bg-amber-200/80"}`}
+                            className={`absolute inset-y-0 left-0 rounded-full ${tr > limit ? "bg-red-500" : "bg-amber-400"}`}
                             style={{ width: `${Math.min(100, (tr / (limit + 1)) * 100)}%` }}
                           />
                         </div>
@@ -115,25 +115,21 @@ export function StateTable({
         </div>
       )}
 
-      <div className="mt-3 grid gap-1 border-t border-hive-border pt-3 text-[12.5px] text-hive-muted sm:grid-cols-2">
-        <div>
-          <span className="text-yellow-300">★</span> Best so far:{" "}
-          <span className="num text-hive-text">
-            f* = {fmt(snap.best.f, 6)} at {vecStr(snap.best.x, 4)}
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 border-t border-hive-border pt-2 text-[12.5px] text-hive-muted">
+        <span>
+          <span className="text-amber-500">★</span> best so far:{" "}
+          <span className="num text-stone-900">
+            f = {fmt(snap.best.f, 6)} at {vecStr(snap.best.x, 4)}
           </span>
-        </div>
-        <div>
-          Memory B (last abandoned):{" "}
-          <span className="num text-hive-text">
-            {snap.abandoned ? `${vecStr(snap.abandoned.x)}, f = ${fmt(snap.abandoned.f)}` : "none yet"}
+        </span>
+        {snap.abandoned && (
+          <span>
+            last abandoned (memory B): <span className="num text-stone-900">{vecStr(snap.abandoned.x)}, f = {fmt(snap.abandoned.f)}</span>
           </span>
-        </div>
-        <div>
-          limit = <span className="num text-hive-text">{limit}</span> · Np = <span className="num text-hive-text">{Np}</span>
-        </div>
-        <div>
-          Function evaluations: <span className="num text-hive-text">{snap.evals}</span>
-        </div>
+        )}
+        <span>
+          limit = <span className="num text-stone-900">{limit}</span>
+        </span>
       </div>
     </section>
   );

@@ -2,16 +2,16 @@
  * Predict-the-next-step quiz: turns an upcoming step into a question that the
  * learner answers BEFORE the tool reveals what happens.
  */
-import { fmt, sub, sup, vecStr } from "./format";
+import { fmt, sub, vecStr } from "./format";
 import type { Step } from "./types";
 
 export type QuizType = "select" | "onlooker" | "scout" | "compute";
 
 export const QUIZ_TYPES: { id: QuizType; label: string }[] = [
-  { id: "select", label: "Greedy selection (move or stay?)" },
-  { id: "onlooker", label: "Onlooker choice (which source?)" },
-  { id: "scout", label: "Scout check (what gets abandoned?)" },
-  { id: "compute", label: "Hand-calc: compute v yourself" },
+  { id: "select", label: "Move or stay? (greedy selection)" },
+  { id: "onlooker", label: "Where do onlookers go?" },
+  { id: "scout", label: "Which flower is abandoned?" },
+  { id: "compute", label: "Calculate the new spot by hand" },
 ];
 
 export type Quiz =
@@ -43,18 +43,18 @@ export function quizFor(step: Step, enabled: Set<QuizType>): Quiz | null {
         kind: "choice",
         type: "select",
         prompt: [
-          `${d.bee === "employed" ? `Employed bee ${m1}` : `Onlooker #${d.onlookerNo}`} found candidate v = ${vecStr(d.v)}.`,
-          `fit(v) = ${fmt(d.fitNew)}   vs   fit(X${sup(m1)}) = ${fmt(d.fitOld)}.  Current t${sub(m1)} = ${d.trialBefore}.`,
-          "What does greedy selection do?",
+          `${d.bee === "employed" ? `Bee ${m1}` : `Onlooker #${d.onlookerNo}`} found a new spot ${vecStr(d.v)}.`,
+          `New spot fitness = ${fmt(d.fitNew)}, old flower fitness = ${fmt(d.fitOld)} (higher fitness = more nectar).`,
+          "What does the bee do?",
         ],
         options: [
-          { value: "move", label: `Move to v and reset t${sub(m1)} = 0` },
-          { value: "stay", label: `Stay at X${sup(m1)} and set t${sub(m1)} = ${d.trialBefore + 1}` },
+          { value: "move", label: "Move to the new spot" },
+          { value: "stay", label: "Stay at the old flower" },
         ],
         answer: d.accepted ? "move" : "stay",
         why: d.accepted
-          ? `fit(v) = ${fmt(d.fitNew)} > ${fmt(d.fitOld)}: higher fitness means more nectar, so the bee moves.`
-          : `fit(v) = ${fmt(d.fitNew)} is not higher than ${fmt(d.fitOld)}, so the bee stays and the source's trial counter goes up.`,
+          ? `${fmt(d.fitNew)} > ${fmt(d.fitOld)}: the new spot has more nectar, so the bee moves.`
+          : `${fmt(d.fitNew)} is not more than ${fmt(d.fitOld)}, so the bee stays and its failure counter goes up.`,
       };
     }
     case "onlooker-choice": {
@@ -66,16 +66,16 @@ export function quizFor(step: Step, enabled: Set<QuizType>): Quiz | null {
           kind: "choice",
           type: "onlooker",
           prompt: [
-            `Onlookers are checking the food sources in turn. Now it's source ${m1}'s turn.`,
-            `r = ${fmt(d.r)},   p${sub(m1)} = ${fmt(d.p)}.`,
-            `Is an onlooker recruited to source ${m1}?`,
+            `Onlookers check the flowers one by one. Now it's flower ${m1}'s turn.`,
+            `Random number r = ${fmt(d.r)}, chance p${sub(m1)} = ${fmt(d.p)}.`,
+            `Does an onlooker go to flower ${m1}?`,
           ],
           options: [
-            { value: "yes", label: "Yes, an onlooker flies there" },
-            { value: "no", label: "No, skip to the next source" },
+            { value: "yes", label: "Yes, it goes there" },
+            { value: "no", label: "No, it skips this flower" },
           ],
           answer: d.recruited ? "yes" : "no",
-          why: d.recruited ? `r < p${sub(m1)}, so it is recruited.` : `r ≥ p${sub(m1)}, so it is skipped.`,
+          why: d.recruited ? `r < p${sub(m1)}, so an onlooker goes there.` : `r ≥ p${sub(m1)}, so the flower is skipped.`,
         };
       }
       const bounds = d.cumulative.map((c, i) => `${i + 1}: [${fmt(i ? d.cumulative[i - 1] : 0, 2)}, ${fmt(c, 2)})`);
@@ -99,14 +99,14 @@ export function quizFor(step: Step, enabled: Set<QuizType>): Quiz | null {
         kind: "multi",
         type: "scout",
         prompt: [
-          `limit = ${d.limit}. Trial counters t = [${d.trial.join(", ")}].`,
-          "Which food sources will be abandoned? (Select none if no source is abandoned.)",
+          `limit = ${d.limit}. How many times each flower failed in a row: t = [${d.trial.join(", ")}].`,
+          "Which flowers get abandoned? (Pick none if no flower is.)",
         ],
         options: d.trial.map((t, i) => ({ value: String(i), label: `${i + 1} (t=${t})` })),
         answer: d.abandon.map(String),
         why: d.abandon.length
-          ? `A source is abandoned only when t > limit, so: ${d.abandon.map((m) => m + 1).join(", ")}.`
-          : `No t is greater than ${d.limit}, so no source is abandoned.`,
+          ? `A flower is abandoned only when t > limit, so: ${d.abandon.map((m) => m + 1).join(", ")}.`
+          : `No t is greater than ${d.limit}, so no flower is abandoned.`,
       };
     }
     case "candidate": {

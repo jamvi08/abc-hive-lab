@@ -96,19 +96,19 @@ export function LineChart({
       >
         {yTicks.map((v, i) => (
           <g key={i}>
-            <line x1={L} x2={L + PW} y1={sy(v)} y2={sy(v)} stroke="#2b2540" strokeWidth="1" />
-            <text x={L - 8} y={sy(v) + 4} textAnchor="end" fontSize="11" fill="#a39cb8" className="num">
+            <line x1={L} x2={L + PW} y1={sy(v)} y2={sy(v)} stroke="#e7e5e0" strokeWidth="1" />
+            <text x={L - 8} y={sy(v) + 4} textAnchor="end" fontSize="11" fill="#6b675f" className="num">
               {log ? `1e${Math.round(Math.log10(v))}` : fmt(v, 3)}
             </text>
           </g>
         ))}
         {xTicks.map((v) => (
-          <text key={v} x={sx(v)} y={T + PH + 16} textAnchor="middle" fontSize="11" fill="#a39cb8" className="num">
+          <text key={v} x={sx(v)} y={T + PH + 16} textAnchor="middle" fontSize="11" fill="#6b675f" className="num">
             {v}
           </text>
         ))}
-        <line x1={L} x2={L + PW} y1={T + PH} y2={T + PH} stroke="#4b4170" />
-        <text x={L + PW / 2} y={H - 2} textAnchor="middle" fontSize="11.5" fill="#a39cb8">
+        <line x1={L} x2={L + PW} y1={T + PH} y2={T + PH} stroke="#a8a29e" />
+        <text x={L + PW / 2} y={H - 2} textAnchor="middle" fontSize="11.5" fill="#6b675f">
           {xLabel}
         </text>
         {series.map((s) => {
@@ -118,9 +118,9 @@ export function LineChart({
           return (
             <g key={s.id}>
               <path d={d} fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" />
-              <circle cx={sx(last.x)} cy={sy(last.y)} r="4" fill={s.color} stroke="#15121f" strokeWidth="2" />
+              <circle cx={sx(last.x)} cy={sy(last.y)} r="4" fill={s.color} stroke="#ffffff" strokeWidth="2" />
               {endLabels && series.length > 1 && (
-                <text x={sx(last.x) + 8} y={sy(last.y) + 4} fontSize="11" fill="#ece9f5">
+                <text x={sx(last.x) + 8} y={sy(last.y) + 4} fontSize="11" fill="#1f1d1a">
                   {s.label}
                 </text>
               )}
@@ -129,10 +129,10 @@ export function LineChart({
         })}
         {hover !== null && series[0]?.points.length > 0 && (
           <g>
-            <line x1={sx(nearest(series[0], hover).x)} x2={sx(nearest(series[0], hover).x)} y1={T} y2={T + PH} stroke="#ece9f5" strokeWidth="1" opacity="0.5" />
+            <line x1={sx(nearest(series[0], hover).x)} x2={sx(nearest(series[0], hover).x)} y1={T} y2={T + PH} stroke="#1f1d1a" strokeWidth="1" opacity="0.5" />
             {series.map((s) => {
               const p = nearest(s, hover);
-              return p ? <circle key={s.id} cx={sx(p.x)} cy={sy(p.y)} r="4" fill={s.color} stroke="#15121f" strokeWidth="2" /> : null;
+              return p ? <circle key={s.id} cx={sx(p.x)} cy={sy(p.y)} r="4" fill={s.color} stroke="#ffffff" strokeWidth="2" /> : null;
             })}
           </g>
         )}

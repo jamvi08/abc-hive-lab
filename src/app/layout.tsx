@@ -27,8 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <div className="flex-1">{children}</div>
         <footer className="border-t border-hive-border px-6 py-4 text-xs text-hive-muted">
-          Hive Lab: an interactive teaching tool for the Artificial Bee Colony algorithm (Karaboga, 2005). Built with Next.js
-          and TypeScript. Every number in the textbook example is checked by automated tests.
+          Hive Lab · a teaching tool for the Artificial Bee Colony algorithm (Karaboga, 2005) · Next.js + TypeScript
         </footer>
       </body>
     </html>

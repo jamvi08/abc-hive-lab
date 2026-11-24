@@ -1,11 +1,11 @@
 import type { Problem } from "./abc/types";
 
 /**
- * Renders the objective landscape as a single-hue (violet) sequential image:
- * light = low f (rich nectar), dark = high f. Iso-lines are drawn where the
+ * Renders the objective landscape as a calm single-hue (lavender) image:
+ * white = low f (rich nectar), lavender = high f. Iso-lines are drawn where the
  * quantised level changes, which gives a contour-plot look.
  */
-const STOPS = ["#f5f3ff", "#ddd6fe", "#a78bfa", "#7c3aed", "#5b21b6", "#3b0f7a", "#1e0b47", "#110726"];
+const STOPS = ["#ffffff", "#fbfaff", "#f4f0ff", "#ece6fe", "#e2dafd", "#d6ccfc"];
 
 function hexToRgb(h: string) {
   const n = parseInt(h.slice(1), 16);
@@ -67,7 +67,7 @@ export function heatmapFor(problem: Problem, key: string, size = 240) {
       const edge =
         (px + 1 < size && level[i + 1] !== level[i]) || (py + 1 < size && level[i + size] !== level[i]);
       if (edge) {
-        const k = t < 0.35 ? 0.82 : 1.25;
+        const k = 0.95;
         r = Math.min(255, r * k);
         gg = Math.min(255, gg * k);
         b = Math.min(255, b * k);

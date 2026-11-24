@@ -304,3 +304,115 @@ export function textbookNote(step: Step): { slide: number; text: string; derived
   }
 }
 
+
+/**
+ * The short, beginner-friendly version shown by default: a simple title and
+ * one or two plain sentences. The full explanation + math is one click away.
+ */
+export function summarize(step: Step, cfg: AbcConfig): { title: string; short: string[] } {
+  const Np = Math.max(2, Math.floor(cfg.colonySize / 2));
+  switch (step.kind) {
+    case "init":
+      return {
+        title: "Start: place the food sources",
+        short: [
+          step.detail.given
+            ? `We start with the ${Np} food sources given on the slide. Each one is a possible answer, and its **fitness** is how much nectar it has.`
+            : `${Np} food sources are placed at random. Each one is a possible answer, and its **fitness** is how much nectar it has.`,
+          "Lower f means more nectar, so the bees want to find the lowest point of the map.",
+        ],
+      };
+    case "candidate": {
+      const d = step.detail;
+      const who = d.bee === "employed" ? `Bee ${d.m + 1}` : `Onlooker #${d.onlookerNo}`;
+      return {
+        title: d.bee === "employed" ? `Employed bee ${d.m + 1} tries a nearby spot` : `Onlooker #${d.onlookerNo} tries a spot near flower ${d.m + 1}`,
+        short: [
+          `${who} changes **only x${sub(d.j + 1)}**, moving it relative to a random partner (flower ${d.k + 1}).${d.wasClamped ? " The move went past the edge, so it is pulled back inside the bounds." : ""}`,
+          `New spot: ${vecStr(d.v)} with f = ${fmt(d.fNew)}. Before, it had f = ${fmt(d.fOld)}.`,
+        ],
+      };
+    }
+    case "select": {
+      const d = step.detail;
+      return d.accepted
+        ? {
+            title: `Better! Flower ${d.m + 1} is updated`,
+            short: [
+              `The new spot has more nectar (fitness ${fmt(d.fitNew)} > ${fmt(d.fitOld)}), so the bee **moves there**.`,
+              `Its "no-improvement" counter t${sub(d.m + 1)} goes back to 0.`,
+            ],
+          }
+        : {
+            title: `Worse, so the bee stays at flower ${d.m + 1}`,
+            short: [
+              `The new spot has less nectar (fitness ${fmt(d.fitNew)} ≤ ${fmt(d.fitOld)}), so the bee **keeps its old flower**.`,
+              `Its "no-improvement" counter goes up: t${sub(d.m + 1)} = ${d.trialAfter}.${d.trialAfter > cfg.limit ? ` That is more than limit = ${cfg.limit}, so this flower will be abandoned.` : ""}`,
+            ],
+          };
+    }
+    case "probabilities": {
+      const { maxIdx } = step.detail;
+      return {
+        title: "The bees dance and share what they found",
+        short: [
+          "Back at the hive, every employed bee dances to show how good its flower is.",
+          `Better flowers get a **higher chance p** of attracting onlookers. Flower ${maxIdx + 1} is the best, so it gets p = 1.`,
+        ],
+      };
+    }
+    case "onlooker-choice": {
+      const d = step.detail;
+      if (d.method === "sweep")
+        return d.recruited
+          ? {
+              title: `Onlooker #${d.onlookerNo} picks flower ${d.m + 1}`,
+              short: [`Random number r = ${fmt(d.r, 2)} is below p${sub(d.m + 1)} = ${fmt(d.p, 2)}, so an onlooker **goes to flower ${d.m + 1}**.`],
+            }
+          : {
+              title: `Flower ${d.m + 1} is skipped`,
+              short: [`Random number r = ${fmt(d.r, 2)} is not below p${sub(d.m + 1)} = ${fmt(d.p, 2)}, so the onlooker **skips** it and checks the next flower.`],
+            };
+      return {
+        title: `The wheel picks flower ${d.m + 1}`,
+        short: [`Onlooker #${d.onlookerNo} spins the roulette wheel. Bigger slices mean better flowers, and it lands on **flower ${d.m + 1}**.`],
+      };
+    }
+    case "scout-check": {
+      const { abandon, limit } = step.detail;
+      return abandon.length
+        ? {
+            title: `Flower ${abandon.map((m) => m + 1).join(", ")} is used up`,
+            short: [`It failed to improve more than limit = ${limit} times in a row, so it will be **abandoned**.`],
+          }
+        : {
+            title: "No flower is abandoned",
+            short: [`No flower has failed more than limit = ${limit} times, so no scout is needed this cycle.`],
+          };
+    }
+    case "scout-replace": {
+      const d = step.detail;
+      return {
+        title: `A scout finds a new flower`,
+        short: [
+          `The bee of flower ${d.m + 1} gives up on ${vecStr(d.old)} and becomes a **scout**.`,
+          `It flies to a random new spot ${vecStr(d.newX)} with f = ${fmt(d.f)}.`,
+        ],
+      };
+    }
+    case "memorize": {
+      const { best, improved } = step.detail;
+      return {
+        title: improved ? `End of cycle ${step.cycle}: new best!` : `End of cycle ${step.cycle}`,
+        short: [`Best answer so far: **f = ${fmt(best.f, 5)}** at ${vecStr(best.x, 3)}.`],
+      };
+    }
+    case "done":
+      return {
+        title: "Finished!",
+        short: [
+          `After ${cfg.maxCycles} cycles the best answer is **f = ${fmt(step.snap.best.f, 6)}** at ${vecStr(step.snap.best.x, 4)}.`,
+        ],
+      };
+  }
+}

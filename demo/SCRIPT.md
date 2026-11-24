@@ -12,121 +12,118 @@ are the ones it logs.
 | --- | --- |
 | 0:00 | Intro: Simulator |
 | 0:22 | Learn page |
-| 0:45 | Textbook example: 0:53 employed bee 1 · 1:09 greedy · 1:18 dance & p · 1:31 onlooker · 1:41 scout · 1:59 slide view |
-| 2:10 | Textbook check: 2:13 run |
-| 2:36 | Free run: 2:50 play · 3:02 end + chart · 3:12 roulette wheel |
-| 3:34 | Quiz: 3:40 question 1 · 3:54 question 2 |
-| 4:06 | Race: 4:11 race · 4:28 thirty races |
+| 0:45 | Slide example: 0:53 bee 1 + *Show the math* · 1:08 worse, stays · 1:18 dance · 1:31 onlooker · 1:42 scout check · 1:48 scout · 1:58 "As on slides" |
+| 2:10 | Slide Check: 2:13 run · 2:19 hand calculation |
+| 2:36 | Free run: 2:52 play · 3:06 skip to end + Progress tab · 3:17 roulette wheel |
+| 3:40 | Quiz: 3:44 question 1 · 3:58 question 2 |
+| 4:10 | Race: 4:17 race · 4:33 thirty races |
 | 4:42 | Outro |
 
 ---
 
 ### 0:00 · Intro
-**[on screen]** The Simulator: colour map, flowers (food sources), side panel.
+**[on screen]** The Simulator: a light map with flowers (food sources), one settings strip, Play and Step buttons.
 
-> Hi! This is **Hive Lab**, an interactive tool I built to teach the **Artificial Bee Colony algorithm**,
-> introduced by Karaboga in 2005. It runs entirely in the browser, it's built with Next.js and TypeScript,
-> and every step of the algorithm is **visualized and explained in plain language**.
+> Hi! This is **Hive Lab**, a simple interactive tool I built to teach the **Artificial Bee Colony algorithm**,
+> introduced by Karaboga in 2005. It runs in the browser, it's built with Next.js and TypeScript,
+> and it explains every step of the algorithm **in plain words**.
 
 ### 0:22 · Learn page
-**[on screen]** Click **Learn ABC**. Scroll past the three bee types and the five formulas.
+**[on screen]** Click **Learn**. Scroll past the three bee types and the five formulas.
 
-> The **Learn** page is a short primer that follows our syllabus. A food source is a candidate solution, and its
-> nectar is the fitness. There are **employed, onlooker and scout** bees, and these are the five formulas from
-> the slides.
+> The **Learn** page is a quick primer that follows our syllabus. A flower is a possible answer, and its nectar
+> is the fitness. There are **employed, onlooker and scout** bees, and these are the five formulas from the
+> slides.
 
-### 0:45 · Textbook example
-**[on screen]** Back to the Simulator, click **Textbook example**.
+### 0:45 · Slide example
+**[on screen]** Back to the Simulator, click **Slide example**.
 
-> Now the **solved example from our slides**. Textbook mode uses exactly the same population and random numbers.
+> Now the **solved example from our slides**. This mode uses exactly the same starting flowers and random numbers.
 
-**[0:53 — click Step; the bee flies to the right edge]**
+**[0:53 — click Step, then "Show the math"]**
 
-> Employed bee one changes **only one variable**, with partner X⁴ and φ = 0.81. That gives **7.67**, which is outside the
-> bounds, so it's **clipped to 5**. The purple box confirms this matches **slide 15**.
+> I press **Step**. Bee one tries a nearby spot by changing **only x₁**. When I click **Show the math**, I see
+> 2 + 0.81 × 7 = **7.67**, which is outside the bounds, so it's **clipped to 5**. That's exactly slide 15.
 
-**[1:09 — Step; a red ✗ and the trial ring appear]**
+**[1:08 — Step; a red ✗ on the map]**
 
-> Greedy selection: fitness 0.037 is worse than 0.167, so the bee **stays**, and its **trial counter** goes up to one.
+> The new spot is worse, fitness 0.037 against 0.167, so the bee **stays**, and its failure counter goes up to one.
 
-**[1:18 — Phase; the bee dances at the hive, and p-values appear]**
+**[1:18 — Skip ▸ next phase; the bee dances at the hive]**
 
-> Now the bees dance in the hive, and onlookers compute **p = 0.9 × fitness ÷ max fitness, plus 0.1**.
-> The pseudocode highlights where we are.
+> I'll **skip** to the next phase. The bees dance in the hive, and better flowers get a **higher chance p**,
+> using p = 0.9 × fitness ÷ max fitness, plus 0.1.
 
-**[1:31 — Step; a blue onlooker flies to source 1]**
+**[1:31 — Step; an onlooker flies to flower 1]**
 
-> The first onlooker draws **r = 0.39**, which is less than **0.729**, so it's recruited to source one, exactly like slide 17.
+> The first onlooker draws **r = 0.39**, which is below **0.729**, so it goes to flower one, just like slide 17.
 
-**[1:41 — Phase, then Step; a red ring, then a pink scout flies across]**
+**[1:42 — Skip ▸ next phase, then Step; a scout flies across]**
 
-> In the scout phase, source five's trial count of **two is greater than the limit of one**. So it's abandoned
-> and saved in **memory B**, and a scout flies to a new random source at **(−0.7, 0.8)**.
+> Flower five has failed **twice, which is more than the limit of one**, so it's abandoned, and a **scout**
+> finds a new random flower at **(−0.7, 0.8)**.
 
-**[1:59 — scroll down, click Slide view]**
+**[1:58 — the table switches to "As on slides"]**
 
-> **Slide view** shows the X, f, fit and t matrices in the same format as slide 19.
+> And this view shows the same X, f, fitness and t matrices as **slide 19**.
 
-### 2:10 · Textbook check
-**[on screen]** Click **Textbook Check**. At 2:13, click **Run the textbook check**, then scroll.
+### 2:10 · Slide Check
+**[on screen]** Click **Slide Check**. At 2:13, click **Run the check**. At 2:19, a hand-calculation section opens.
 
-> To prove the tool is correct, this page compares **86 values from the slides** and **61 values from my own
-> hand calculation** with the engine, and all 61 match. It even caught **three small slips in the slides**.
-> For example, p₂ should be **0.854, not 0.859**. It also explains why none of them change the result.
+> To prove it's correct, **Slide Check** runs the example and compares **every number**. All **61 values of my hand
+> calculation** match, and it found **three small slips** on the slides, like p₂ = 0.854, not 0.859. None of them
+> change the result.
 
 ### 2:36 · Free run
-**[on screen]** Simulator: choose **Himmelblau**, point at the sliders, switch on **trails**.
+**[on screen]** Simulator in Free run. Choose **Himmelblau**, point at Bees, limit and Cycles, switch on trails.
 
-> In **free-run** mode I can pick a problem, like **Himmelblau's function** with its **four equal minima**, or type in
-> my own function. I can change the **colony size, the limit, the cycles** and the **onlooker rule**.
+> In **Free run** I can choose a problem, like **Himmelblau's function with four equal minima**, or type my own.
+> I can change the number of **bees, the limit and the cycles**.
 
-**[2:50 — raise the speed and press Play]**
+**[2:52 — raise the speed and press Play]**
 
-> When I press **Play**, the bee flies to every action. With trails on, you can watch the colony
-> **split between the different minima**.
+> When I press **Play**, the bee flies to every action. The trails show the colony **splitting between the minima**.
 
-**[3:02 — End, then scroll to the chart]**
+**[3:06 — Skip ▸ to the end, open the Progress tab]**
 
-> The convergence chart shows the error of the best solution falling on a log scale.
+> The **Progress** tab shows the best answer getting closer to the true minimum, cycle by cycle.
 
-**[3:12 — switch to Roulette wheel and step through the onlookers]**
+**[3:17 — switch to the roulette wheel and step]**
 
-> Onlookers can use the slides' rule, **r less than p**, which is drawn as a rose, or a **roulette wheel**,
-> where each slice is proportional to p. The blue dots count the onlookers each source attracts.
-> That's the **positive feedback**.
+> Onlookers can use the slides' rule, **r less than p**, or a **roulette wheel**, where better flowers get bigger
+> slices. That's how good flowers attract more bees, which is the **positive feedback**.
 
-### 3:34 · Quiz mode
-**[on screen]** Textbook example again, and turn on **Quiz mode**.
+### 3:40 · Quiz me
+**[on screen]** Slide example again, and switch on **Quiz me**.
 
-> **Quiz mode** turns watching into active learning.
+> **Quiz me** turns watching into learning.
 
-**[3:40 — a "Predict the next step" card appears; click "Stay"]**
+**[3:44 — a quiz card appears; click "Stay at the old flower"]**
 
-> Before each decision, the tool asks me to **predict** what happens. The candidate's fitness is lower, so
-> greedy selection keeps the old source. And that's correct!
+> Before each decision, the tool asks me what happens next. The new spot has less nectar, so the bee stays.
+> And it's correct!
 
-**[3:54 — next question; click "Move"]**
+**[3:58 — next question; click "Move to the new spot"]**
 
-> This bee found a better source, so it moves. The quiz also covers onlooker choices, scout checks,
-> and even computing v **by hand**.
+> This time the new spot is better, so the bee moves. My score is kept at the top.
 
-### 4:06 · ABC vs random search race
-**[on screen]** Click **ABC vs Random Race**, add **"ABC, no scouts"**, then at 4:11 press **Race**.
+### 4:10 · Race
+**[on screen]** Click **Race**, add "ABC, no scouts" under More options, then at 4:17 press **Race**.
 
-> Finally, the **Race** page asks: does the colony's teamwork actually help? Each method gets **exactly the same
-> number of function evaluations** on Rastrigin's function, which is full of local traps.
-> ABC ends up **many orders of magnitude better**, and without scouts it gets stuck, which shows why the
-> negative feedback matters.
+> The **Race** page asks: does the teamwork really help?
 
-**[4:28 — Run 30 races]**
+> ABC and random guessing get **exactly the same number of tries** on Rastrigin's function. ABC gets **far closer**
+> to the true minimum, and without scouts it gets stuck, which shows why scouts matter.
 
-> And over **thirty repeated races, ABC wins all thirty**.
+**[4:33 — Run 30 races]**
+
+> Over **thirty races, ABC wins all thirty**.
 
 ### 4:42 · Outro
 **[on screen]** Back to the Simulator.
 
-> Hive Lab is open source on GitHub, with a README and **168 automated tests**, and it's live on
-> GitHub Pages. Thanks for watching!
+> Hive Lab is open source on GitHub, with a README and **168 automated tests**, and it's live on GitHub Pages.
+> Thanks for watching!
 
 ---
 

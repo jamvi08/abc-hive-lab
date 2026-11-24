@@ -5,7 +5,7 @@ import type { Selection } from "@/lib/abc/types";
 
 export function Pseudocode({ line, selection }: { line: number; selection: Selection }) {
   return (
-    <section className="card p-4">
+    <section>
       <div className="label mb-2">General algorithm (slide 7)</div>
       <ol className="font-mono text-[12.5px] leading-6">
         {PSEUDOCODE.map((l, i) => {
@@ -16,7 +16,7 @@ export function Pseudocode({ line, selection }: { line: number; selection: Selec
           return (
             <li
               key={i}
-              className={`rounded-md px-2 transition-colors ${active ? "bg-honey/15 text-honey" : header ? "text-zinc-200" : "text-hive-muted"}`}
+              className={`rounded-md px-2 transition-colors ${active ? "bg-amber-100 text-amber-700" : header ? "text-stone-800" : "text-hive-muted"}`}
               style={{ paddingLeft: 8 + l.indent * 18 }}
             >
               <span className="mr-2 inline-block w-3 text-right text-[10px] text-hive-muted/60">{active ? "▶" : ""}</span>

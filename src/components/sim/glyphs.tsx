@@ -1,9 +1,9 @@
 export type Role = "employed" | "onlooker" | "scout";
 
 export const ROLE_COLOR: Record<Role, string> = {
-  employed: "#f59e0b",
-  onlooker: "#38bdf8",
-  scout: "#fb7185",
+  employed: "#d97706",
+  onlooker: "#0284c7",
+  scout: "#e11d48",
 };
 
 export const ROLE_LABEL: Record<Role, string> = {
@@ -16,11 +16,11 @@ export const ROLE_LABEL: Record<Role, string> = {
 export function BeeGlyph({ role, scale = 1, waggle = false }: { role: Role; scale?: number; waggle?: boolean }) {
   return (
     <g transform={`scale(${scale})`}>
-      <circle r="13" fill={ROLE_COLOR[role]} opacity="0.22" />
+      <circle r="13" fill={ROLE_COLOR[role]} opacity="0.15" />
       <circle r="13" fill="none" stroke={ROLE_COLOR[role]} strokeWidth="2" />
       <g className={waggle ? "waggle" : undefined}>
-        <ellipse cx="-3" cy="-6" rx="5" ry="3.4" fill="#f8fafc" opacity="0.85" transform="rotate(-25 -3 -6)" />
-        <ellipse cx="3" cy="-6" rx="5" ry="3.4" fill="#f8fafc" opacity="0.85" transform="rotate(25 3 -6)" />
+        <ellipse cx="-3" cy="-6" rx="5" ry="3.4" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.6" opacity="0.95" transform="rotate(-25 -3 -6)" />
+        <ellipse cx="3" cy="-6" rx="5" ry="3.4" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.6" opacity="0.95" transform="rotate(25 3 -6)" />
         <ellipse cx="0" cy="1" rx="5.2" ry="7.2" fill="#fbbf24" stroke="#1c1917" strokeWidth="1.2" />
         <rect x="-5" y="-0.8" width="10" height="2" fill="#1c1917" />
         <rect x="-4.4" y="3" width="8.8" height="1.8" fill="#1c1917" />
@@ -64,9 +64,9 @@ export function HiveGlyph({ size = 18 }: { size?: number }) {
   }).join(" ");
   return (
     <g>
-      <polygon points={pts} fill="#1c1829" fillOpacity="0.85" stroke="#fbbf24" strokeWidth="1.5" />
+      <polygon points={pts} fill="#fff7ed" fillOpacity="0.85" stroke="#fbbf24" strokeWidth="1.5" />
       <path d={`M ${-s * 0.5} ${-s * 0.2} H ${s * 0.5} M ${-s * 0.6} ${s * 0.15} H ${s * 0.6} M ${-s * 0.45} ${s * 0.5} H ${s * 0.45}`} stroke="#fbbf24" strokeWidth="1.4" opacity="0.8" />
-      <circle cy={s * 0.15} r={s * 0.16} fill="#0c0a14" />
+      <circle cy={s * 0.15} r={s * 0.16} fill="#92400e" />
     </g>
   );
 }

@@ -32,7 +32,7 @@ export function MiniSpace({
   const sy = (y: number) => P + (1 - (y - lb[1]) / (ub[1] - lb[1])) * (S - 2 * P);
   return (
     <svg viewBox={`0 0 ${S} ${S}`} className="w-full rounded-lg" role="img">
-      <rect width={S} height={S} fill="#1e0b47" />
+      <rect width={S} height={S} fill="#ffffff" />
       {heat && <image href={heat.url} x={P} y={P} width={S - 2 * P} height={S - 2 * P} preserveAspectRatio="none" />}
       {samples?.map((x, i) => (
         <circle
@@ -41,7 +41,7 @@ export function MiniSpace({
           cy={sy(x[1])}
           r={2.2}
           fill={color}
-          stroke="#0c0a14"
+          stroke="#ffffff"
           strokeWidth="0.8"
           opacity={0.25 + 0.75 * ((i + 1) / samples.length) ** 2}
         />

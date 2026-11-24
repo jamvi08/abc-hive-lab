@@ -158,152 +158,159 @@ async function scene(name, until, fn) {
 }
 
 // Scene timings must match demo/SCRIPT.md
+const skipTo = async (id) => {
+  await clickId("skip");
+  await sleep(250);
+  await clickId(id);
+};
+
 await scene("1 · Intro", 22, async () => {
   await sleep(2500);
-  await glide(600, 470, 1400);
+  await glide(330, 560, 1400);
   await sleep(1500);
-  await glide(1150, 330, 1400);
+  await glide(1000, 380, 1400);
   await sleep(2000);
-  await glide(160, 500, 1400);
+  await glide(560, 150, 1400);
 });
 
 await scene("2 · Learn page", 45, async () => {
-  await clickText("Learn ABC");
-  await sleep(2500);
+  await clickText("Learn");
+  await sleep(3000);
   await glide(700, 480, 900);
   await sleep(2500);
   await smoothScroll(560, 1600);
-  await sleep(4500);
-  await smoothScroll(1000, 1600);
-  await sleep(4500);
+  await sleep(4000);
+  await smoothScroll(1050, 1600);
+  await sleep(4000);
 });
 
-await scene("3 · Textbook example, step by step", 130, async () => {
+await scene("3 · Slide example, step by step", 130, async () => {
   await clickText("Simulator");
   await sleep(1200);
   await clickId("mode-textbook");
   await sleep(5000);
   mark("Step: employed bee 1");
-  await clickId("step"); // employed bee 1: 7.67 → clipped to 5
-  await glide(1150, 600, 1200);
-  await sleep(4500);
-  await glide(1150, 790, 1000);
-  await sleep(7500);
-  mark("Step: greedy selection");
-  await clickId("step"); // greedy: rejected, t1 = 1
+  await clickId("step"); // employed bee 1: 7.67 -> clipped to 5
+  await glide(1000, 360, 1000);
+  await sleep(3500);
+  await clickId("show-math");
   await sleep(8000);
-  mark("Phase: probabilities / dance");
-  await clickId("next-phase"); // → probabilities
-  await glide(1150, 520, 900);
-  await sleep(9500);
-  mark("Step: onlooker 1 recruited");
-  await clickId("step"); // onlooker 1 recruited (r = 0.39 < 0.729)
+  mark("Step: greedy selection");
+  await clickId("step"); // worse -> stays, t1 = 1
+  await sleep(8000);
+  mark("Skip: next phase (dance)");
+  await skipTo("next-phase"); // -> probabilities
+  await glide(1000, 520, 900);
   await sleep(9000);
-  mark("Phase: scout check");
-  await clickId("next-phase"); // → scout check
-  await sleep(4500);
-  mark("Step: scout replaces source 5");
-  await clickId("step"); // scout replaces source 5
-  await glide(1150, 560, 900);
-  await sleep(9500);
-  mark("Slide view");
-  await scrollToEl(tid("view-matrix"), 160);
+  mark("Step: onlooker 1");
+  await clickId("step"); // r = 0.39 < 0.729
+  await sleep(8500);
+  mark("Skip: scout check");
+  await skipTo("next-phase"); // -> scout check
+  await sleep(4000);
+  mark("Step: scout");
+  await clickId("step"); // scout replaces flower 5
+  await sleep(8500);
+  mark("As on slides");
+  await clickId("show-math"); // close the math again
   await clickId("view-matrix");
   await sleep(6500);
   await clickId("view-table");
-  await smoothScroll(0, 700);
 });
 
-await scene("4 · Textbook check page", 156, async () => {
-  await clickText("Textbook Check");
+await scene("4 · Slide check page", 156, async () => {
+  await clickText("Slide Check");
   await sleep(2500);
-  mark("Run the textbook check");
+  mark("Run the check");
   await clickId("run-check");
-  await sleep(4500);
-  await smoothScroll(700, 1800);
-  await sleep(4000);
-  await smoothScroll(1820, 1800);
-  await sleep(3500);
-  await smoothScroll(4300, 2200);
-  await sleep(2500);
+  await sleep(6000);
+  await clickId("fold-hand-1"); // employed-bee hand calculation
+  await sleep(1000);
+  await scrollToEl(tid("fold-hand-1"), 120, 1200);
+  await sleep(6000);
+  await smoothScroll(0, 900);
 });
 
-await scene("5 · Free run: problems, parameters, play, wheel", 214, async () => {
+await scene("5 · Free run: problems, parameters, play, wheel", 221, async () => {
   await clickText("Simulator");
   await sleep(1500);
   await point(tid("problem"));
   await page.selectOption('[data-testid="problem"]', "himmelblau");
   await sleep(2500);
   await point(tid("colony"), { dx: 0.45 });
-  await sleep(1200);
+  await sleep(1000);
+  await point(tid("limit"));
+  await sleep(1000);
   await point(tid("cycles"), { dx: 0.25 });
+  await sleep(1000);
+  await clickId("more-options");
   await sleep(1200);
-  await clickId("sel-sweep");
-  await sleep(800);
   await clickId("trails");
-  await smoothScroll(0, 600);
-  await clickId("speed", { dx: 0.93 }); // ~30 steps/s
+  await sleep(600);
+  await clickId("more-options");
   mark("Play");
+  await clickId("speed", { dx: 0.93 }); // ~30 steps/s
   await clickId("play");
-  await glide(700, 520, 1500);
+  await glide(330, 520, 1500);
   await sleep(8000);
-  mark("End + convergence chart");
-  await clickId("to-end");
-  await sleep(2500);
-  await scrollToEl(page.getByText("Error of best-so-far").first(), 300, 1200);
-  await sleep(4000);
-  await smoothScroll(0, 800);
-  mark("Roulette wheel");
-  await clickId("sel-roulette");
-  await clickId("next-phase");
-  await clickId("next-phase");
-  await clickId("step");
-  await scrollToEl(page.getByText("Onlooker selection: roulette wheel").first(), 380, 900);
-  await sleep(1500);
-  await clickId("step");
-  await clickId("step");
-  await sleep(1500);
-  await clickId("step");
-  await clickId("step");
-  await clickId("step");
+  mark("Skip to the end + progress tab");
+  await skipTo("to-end");
   await sleep(2000);
+  await clickId("tab-chart");
+  await sleep(4000);
+  mark("Roulette wheel");
+  await clickId("more-options");
+  await clickId("sel-roulette");
+  await clickId("more-options");
+  await skipTo("next-phase");
+  await skipTo("next-phase");
+  await clickId("tab-wheel");
+  await clickId("step");
+  await sleep(1200);
+  await clickId("step");
+  await clickId("step");
+  await sleep(1200);
+  await clickId("step");
+  await clickId("step");
+  await clickId("step");
+  await sleep(1500);
 });
 
-await scene("6 · Quiz mode", 246, async () => {
-  await smoothScroll(0, 600);
+await scene("6 · Quiz mode", 251, async () => {
   await clickId("mode-textbook");
   await sleep(600);
   await clickId("quiz-toggle");
-  await smoothScroll(0, 700);
-  await clickId("step");
   await sleep(1200);
   mark("Quiz question 1");
-  await clickId("step"); // quiz: greedy selection for bee 1
+  await clickId("step");
+  await sleep(1000);
+  await clickId("step"); // quiz: bee 1
   await sleep(4500);
   await clickId("quiz-stay");
   await sleep(5000);
+  mark("Quiz question 2");
   await clickId("step");
   await sleep(800);
-  mark("Quiz question 2");
-  await clickId("step"); // quiz: greedy selection for bee 2
+  await clickId("step"); // quiz: bee 2
   await sleep(3500);
   await clickId("quiz-move");
-  await sleep(4500);
+  await sleep(4000);
 });
 
-await scene("7 · ABC vs random search race", 282, async () => {
-  await clickText("ABC vs Random Race");
-  await sleep(2000);
+await scene("7 · Race", 283, async () => {
+  await clickText("Race");
+  await sleep(1500);
+  await clickId("race-more");
   await clickId("lane-noScout");
-  await sleep(1000);
+  await clickId("race-more");
   mark("Race");
   await clickId("race-play");
   await sleep(9500);
-  await scrollToEl(page.getByText("Error of best-so-far vs function evaluations").first(), 100, 1400);
-  await sleep(5000);
+  await scrollToEl(page.getByText("How far each racer").first(), 100, 1400);
+  await sleep(4500);
   mark("Run 30 races");
   await clickId("race-stats");
-  await scrollToEl(tid("race-verdict"), 420, 1200);
+  await scrollToEl(tid("race-verdict"), 300, 1200);
   await sleep(6000);
 });
 
