@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Tex } from "@/components/Tex";
 import { BeeGlyph, FlowerGlyph, HiveGlyph } from "@/components/sim/glyphs";
 import { PSEUDOCODE } from "@/lib/abc/engine";
+import { DEMO_VIDEO_EMBED, DEMO_VIDEO_URL } from "@/lib/links";
 
 export const metadata: Metadata = { title: "Learn ABC · Hive Lab" };
 
@@ -73,6 +74,24 @@ export default function LearnPage() {
           </Link>
         </div>
       </header>
+
+      <section className="card overflow-hidden" id="demo">
+        <div className="flex items-baseline justify-between px-5 py-3">
+          <h2 className="font-semibold text-stone-900">Watch the 5-minute demo</h2>
+          <a href={DEMO_VIDEO_URL} target="_blank" rel="noopener noreferrer" className="text-[13px] text-amber-700 hover:underline">
+            Open in Google Drive ↗
+          </a>
+        </div>
+        <div className="aspect-[16/10] w-full bg-stone-100">
+          <iframe
+            src={DEMO_VIDEO_EMBED}
+            title="Hive Lab demo video"
+            className="h-full w-full"
+            allow="autoplay; fullscreen"
+            loading="lazy"
+          />
+        </div>
+      </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         {(

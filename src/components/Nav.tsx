@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DEMO_VIDEO_URL } from "@/lib/links";
 import { BeeGlyph } from "./sim/glyphs";
 
 const LINKS = [
@@ -43,6 +44,15 @@ export function Nav() {
             );
           })}
         </nav>
+        <a
+          href={DEMO_VIDEO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-hive-border bg-white px-3 py-1.5 text-sm font-medium text-stone-800 hover:bg-hive-panel2"
+          data-testid="demo-video"
+        >
+          <span className="text-amber-600">▶</span> Demo video
+        </a>
       </div>
     </header>
   );

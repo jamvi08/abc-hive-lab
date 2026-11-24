@@ -7,7 +7,7 @@ and checked against a hand calculation.
 
 **Live demo:** https://jamvi08.github.io/abc-hive-lab/
 
-**Demo video (3–5 min):** _add your YouTube / Drive link here_
+**Demo video (5 min):** https://drive.google.com/file/d/1JmoKv_6C0Om9IeNi2sv92iyolQH6WHpG/view?usp=sharing
 
 ![Simulator: textbook example, employed bee 1](docs/screenshots/simulator.png)
 
